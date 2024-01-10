@@ -1,6 +1,7 @@
 package com.study.batch;
 
 import com.study.batch.batch.BatchStatus;
+import com.study.batch.batch.Job;
 import com.study.batch.batch.JobExecution;
 import com.study.batch.customer.Customer;
 import com.study.batch.customer.CustomerRepository;
@@ -16,13 +17,13 @@ import java.util.UUID;
 
 
 @SpringBootTest
-class DormantBatchJobTest {
+class JobTest {
 
     @Autowired
     private CustomerRepository customerRepository;
 
     @Autowired
-    private DormantBatchJob dormantBatchJob;
+    private Job job;
 
     @BeforeEach
     public void setup(){
@@ -44,7 +45,7 @@ class DormantBatchJobTest {
         saveCustomer(364);
 
         // when
-        final JobExecution result = dormantBatchJob.execute();
+        final JobExecution result = job.execute();
 
         // then
         final long dormantCount = customerRepository.findAll()
@@ -74,7 +75,7 @@ class DormantBatchJobTest {
 
 
         // when
-        final JobExecution result = dormantBatchJob.execute();
+        final JobExecution result = job.execute();
 
         // then
         final long dormantCount = customerRepository.findAll()
@@ -91,7 +92,7 @@ class DormantBatchJobTest {
     void test3() {
 
         // when
-        final JobExecution result = dormantBatchJob.execute();
+        final JobExecution result = job.execute();
 
         // then
         final long dormantCount = customerRepository.findAll()
@@ -108,10 +109,10 @@ class DormantBatchJobTest {
     @DisplayName("배치가 실패하면 BatchStatus는 FAILED를 반환해야한다.")
     void test4(){
         // given
-        final DormantBatchJob dormantBatchJob = new DormantBatchJob(null);
+        final Job job = new Job(null);
 
         // when
-        final JobExecution result = dormantBatchJob.execute();
+        final JobExecution result = job.execute();
 
         // then
         Assertions.assertThat(result.getStatus()).isEqualTo(BatchStatus.FAILED);
